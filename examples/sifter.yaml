@@ -1,0 +1,52 @@
+# Sifter Manifest Example
+#
+# This file defines builds using tags (name_version).
+# Each build produces a container file named <name>_<version>.sif
+#
+# Key concepts:
+# - builds: Define each build with a unique tag (name_version)
+# - base: Optional reference to another build (must be defined earlier)
+# - steps: List of definition files to build in sequence
+# - args: Build arguments passed to the definition file
+#
+# Output naming: <name>_<version>.sif
+# Example: base-py312_0.0.1.sif
+
+builds:
+  # ============================================================
+  # Base images - no base, built first
+  # ============================================================
+
+  base-hello_0.0.1:
+    steps:
+      - path: definitions/base/base.def
+        args:
+          BASE_MESSAGE: "Hello from base"
+          PKG_NAME: "curl"
+
+  base-howdy_0.0.1:
+    steps:
+      - path: definitions/base/base.def
+        args:
+          BASE_MESSAGE: "Howdy from base"
+          PKG_NAME: "wget"
+
+  # ============================================================
+  # Application containers - built on base images
+  # ============================================================
+
+  app-hello_0.0.1:
+    base: base-hello_0.0.1
+    steps:
+      - path: definitions/app/app.def
+        args:
+          APP_MESSAGE: "Hello from app"
+          APP_FILE: "/opt/app/message.txt"
+
+  app-howdy_0.0.1:
+    base: base-howdy_0.0.1
+    steps:
+      - path: definitions/app/app.def
+        args:
+          APP_MESSAGE: "Howdy from app"
+          APP_FILE: "/opt/app/howdy.txt"

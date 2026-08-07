@@ -1,0 +1,5 @@
+# Build with shorthand step syntax (path only, no args)
+builds:
+  myapp_1.0.0:
+    steps:
+      - definitions/app.def

@@ -1,0 +1,10 @@
+# Build with base image dependency
+builds:
+  pytorch-base_0.0.1:
+    steps:
+      - definitions/pytorch/pytorch.def
+
+  overlay_1.0.0:
+    base: pytorch-base_0.0.1
+    steps:
+      - definitions/overlay/overlay.def

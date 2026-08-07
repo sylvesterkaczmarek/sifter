@@ -1,0 +1,22 @@
+Bootstrap: localimage
+From: {{ BASE_IMAGE }}
+
+%labels
+    Author Sifter Examples
+    Description App layer for ad-hoc builds (no build args)
+
+%post
+    # Add app layer marker
+    echo "app" >> /opt/info/layer
+
+    # Create a simple app script
+    cat <<'SCRIPT' > /usr/local/bin/show-layers
+#!/bin/sh
+echo "Container layers:"
+cat /opt/info/layer
+SCRIPT
+    chmod +x /usr/local/bin/show-layers
+
+%runscript
+    /usr/local/bin/show-layers
+    exec "$@"

@@ -1,0 +1,25 @@
+# Valid manifest with base dependencies for testing
+builds:
+  # Base PyTorch image
+  pytorch-2.9.1-cu126_0.0.5:
+    steps:
+      - path: definitions/pytorch/pytorch.def
+        args:
+          PYTORCH_VERSION: "2.9.1"
+          CUDA_VERSION: "12.6"
+
+  # vLLM 0.14.0 built on PyTorch
+  vllm-0.14.0_0.0.5:
+    base: pytorch-2.9.1-cu126_0.0.5
+    steps:
+      - path: definitions/vllm/vllm.def
+        args:
+          VLLM_VERSION: "0.14.0"
+
+  # vLLM 0.14.1 built on PyTorch
+  vllm-0.14.1_0.0.5:
+    base: pytorch-2.9.1-cu126_0.0.5
+    steps:
+      - path: definitions/vllm/vllm.def
+        args:
+          VLLM_VERSION: "0.14.1"

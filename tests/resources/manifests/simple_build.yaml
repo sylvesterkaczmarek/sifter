@@ -1,0 +1,7 @@
+# Simple single-step build with args
+builds:
+  pytorch-base_0.0.1:
+    steps:
+      - path: definitions/pytorch/pytorch.def
+        args:
+          PYTORCH_VERSION: "2.9.1"

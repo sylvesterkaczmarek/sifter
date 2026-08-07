@@ -1,0 +1,17 @@
+#!/bin/bash
+# Fake `oras` for tests. Reproduces the real client's quirks that substring
+# assertions can't catch: it rejects the oras:// scheme and absolute file
+# operands, and fakes a pull by creating the output SIF.
+for a in "$@"; do
+  case "$a" in oras://*) echo "invalid reference: $a" >&2; exit 1 ;; esac
+done
+if [ "$1" = pull ]; then
+  out=""
+  while [ $# -gt 0 ]; do [ "$1" = --output ] && out="$2"; shift; done
+  : "${out:?}"
+  touch "$out/base_1.sif"
+elif [ "$1" = push ]; then
+  for a in "$@"; do
+    case "$a" in /*) echo "absolute file path detected" >&2; exit 1 ;; esac
+  done
+fi

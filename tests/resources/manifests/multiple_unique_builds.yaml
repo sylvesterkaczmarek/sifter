@@ -1,0 +1,13 @@
+# Valid: multiple builds with unique tags
+builds:
+  pytorch-v1_0.0.5:
+    steps:
+      - definitions/pytorch.def
+
+  pytorch-v2_0.0.5:
+    steps:
+      - definitions/pytorch.def
+
+  vllm-v1_0.0.5:
+    steps:
+      - definitions/vllm.def

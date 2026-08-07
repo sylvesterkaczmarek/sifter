@@ -1,0 +1,29 @@
+Bootstrap: docker
+# Pinned by digest for a reproducible, supply-chain-safe base (still the ubuntu:24.04 tag).
+From: ubuntu:24.04@sha256:4fbb8e6a8395de5a7550b33509421a2bafbc0aab6c06ba2cef9ebffbc7092d90
+
+%arguments
+    BASE_MESSAGE="Hello from base"
+    PKG_NAME=curl
+
+%labels
+    Author Sifter Examples
+    Description Simple base image with a configurable message
+
+%post
+    export DEBIAN_FRONTEND=noninteractive
+    BASE_MESSAGE="{{ BASE_MESSAGE }}"
+    PKG_NAME="{{ PKG_NAME }}"
+
+    apt-get update && apt-get install -y --no-install-recommends \
+        ca-certificates \
+        "$PKG_NAME" \
+        && rm -rf /var/lib/apt/lists/*
+
+    mkdir -p /opt/base-info
+    echo "$BASE_MESSAGE" > /opt/base-info/message
+    echo "$PKG_NAME" > /opt/base-info/pkg
+
+%runscript
+    echo "Base message: $(cat /opt/base-info/message)"
+    exec "$@"

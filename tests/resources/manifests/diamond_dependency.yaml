@@ -1,0 +1,20 @@
+# Valid: diamond pattern (D→B,C→A) is not circular
+builds:
+  d_0.0.5:
+    steps:
+      - definitions/d.def
+
+  b_0.0.5:
+    base: d_0.0.5
+    steps:
+      - definitions/b.def
+
+  c_0.0.5:
+    base: d_0.0.5
+    steps:
+      - definitions/c.def
+
+  a_0.0.5:
+    base: b_0.0.5
+    steps:
+      - definitions/a.def

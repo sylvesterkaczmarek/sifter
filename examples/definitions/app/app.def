@@ -1,0 +1,29 @@
+Bootstrap: localimage
+From: {{ BASE_IMAGE }}
+
+%arguments
+    APP_MESSAGE="Hello from app"
+    APP_FILE=/opt/app/message.txt
+
+%labels
+    Author Sifter Examples
+    Description Simple app image that extends the base image
+
+%post
+    APP_MESSAGE="{{ APP_MESSAGE }}"
+    APP_FILE="{{ APP_FILE }}"
+
+    mkdir -p "$(dirname "$APP_FILE")"
+    echo "$APP_MESSAGE" > "$APP_FILE"
+
+    cat <<'SCRIPT' > /usr/local/bin/app-message
+#!/bin/sh
+set -e
+printf 'Base: %s\n' "$(cat /opt/base-info/message)"
+printf 'App: %s\n' "$(cat /opt/app/message.txt)"
+SCRIPT
+    chmod +x /usr/local/bin/app-message
+
+%runscript
+    /usr/local/bin/app-message
+    exec "$@"

@@ -1,0 +1,6 @@
+# Invalid: build references itself as base
+builds:
+  self-ref_0.0.5:
+    base: self-ref_0.0.5
+    steps:
+      - definitions/self.def

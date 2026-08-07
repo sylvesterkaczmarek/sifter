@@ -1,0 +1,57 @@
+# Install: uv run prek install
+# Run manually: uv run prek run --all-files
+
+default_language_version:
+  python: python3.11
+
+repos:
+  # ==========================================================================
+  # General hooks
+  # ==========================================================================
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v6.0.0
+    hooks:
+      - id: trailing-whitespace
+      - id: end-of-file-fixer
+      - id: check-yaml
+      - id: check-toml
+      - id: check-json
+      - id: check-added-large-files
+        args: ['--maxkb=1000']
+      - id: check-merge-conflict
+      - id: detect-private-key
+      - id: check-case-conflict
+
+  # ==========================================================================
+  # uv lock file check
+  # ==========================================================================
+  - repo: https://github.com/astral-sh/uv-pre-commit
+    rev: 0.9.26
+    hooks:
+      - id: uv-lock
+        name: uv-lock (check lockfile is up to date)
+
+  # ==========================================================================
+  # Ruff - Linting & Formatting
+  # ==========================================================================
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    # Keep consistent with pyproject.toml
+    rev: v0.14.14
+    hooks:
+      - id: ruff-check
+        name: ruff (lint)
+        args: [--fix, --exit-non-zero-on-fix]
+      - id: ruff-format
+        name: ruff (format)
+
+  # ==========================================================================
+  # ty - Type Checking (Astral)
+  # ==========================================================================
+  - repo: local
+    hooks:
+      - id: ty
+        name: ty (type check)
+        entry: uv run ty check
+        language: system
+        types: [python]
+        pass_filenames: false

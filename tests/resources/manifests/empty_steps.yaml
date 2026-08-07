@@ -1,0 +1,4 @@
+# Invalid: build with empty steps list
+builds:
+  empty_0.0.5:
+    steps: []

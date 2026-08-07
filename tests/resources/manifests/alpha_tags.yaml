@@ -1,0 +1,13 @@
+# Builds with non-numeric tags
+builds:
+  myapp_stable:
+    steps:
+      - definitions/app.def
+
+  myapp_dev:
+    steps:
+      - definitions/app.def
+
+  myapp_prod:
+    steps:
+      - definitions/app.def

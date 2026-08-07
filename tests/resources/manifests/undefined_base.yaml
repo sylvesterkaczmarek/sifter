@@ -1,0 +1,6 @@
+# Invalid: base references a build that doesn't exist
+builds:
+  a_0.0.5:
+    base: nonexistent_0.0.5
+    steps:
+      - definitions/a.def

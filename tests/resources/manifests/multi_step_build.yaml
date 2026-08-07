@@ -1,0 +1,10 @@
+# Build with multiple steps
+builds:
+  vllm-0.14.0_0.0.1:
+    steps:
+      - path: definitions/pytorch/pytorch.def
+        args:
+          PYTORCH_VERSION: "2.9.1"
+      - path: definitions/vllm/vllm.def
+        args:
+          VLLM_VERSION: "0.14.0"

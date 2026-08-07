@@ -1,0 +1,6 @@
+#!/bin/bash
+# Fake `cosign` for tests. The reported version and the exit code are controlled
+# by the test via FAKE_COSIGN_VERSION / FAKE_COSIGN_EXIT (defaults mimic a
+# healthy cosign v3); `cosign version` always succeeds so the floor can read it.
+[ "$1" = version ] && { echo "GitVersion: ${FAKE_COSIGN_VERSION:-v3.1.0}"; exit 0; }
+exit "${FAKE_COSIGN_EXIT:-0}"

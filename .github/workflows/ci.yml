@@ -1,0 +1,77 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+# Least-privilege token — this workflow only reads the repo and runs checks.
+permissions:
+  contents: read
+
+# Cancel in-flight runs on the same ref when a new commit lands; PRs get many
+# quick-fire pushes and we only care about the final state.
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  lint:
+    name: Lint (ruff)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Install uv
+        uses: astral-sh/setup-uv@c771a70e6277c0a99b617c7a806ffedaca235ff9 # v9.0.0
+        with:
+          enable-cache: true
+      - name: Sync dependencies
+        run: uv sync --locked --all-extras
+      - name: Ruff lint
+        run: uv run ruff check
+      - name: Ruff format check
+        run: uv run ruff format --check
+
+  type-check:
+    name: Type check (ty)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Install uv
+        uses: astral-sh/setup-uv@c771a70e6277c0a99b617c7a806ffedaca235ff9 # v9.0.0
+        with:
+          enable-cache: true
+      # --all-extras installs boto3 (the `s3` extra) so ty can resolve the lazy
+      # `import boto3` in the S3 backend; without it ty reports unresolved-import.
+      - name: Sync dependencies
+        run: uv sync --locked --all-extras
+      - name: ty
+        run: uv run ty check
+
+  test:
+    name: Test (pytest, py${{ matrix.python-version }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        # Floor and ceiling of the supported range (pyproject requires-python
+        # >= 3.10). Add intermediate versions here if a regression warrants it.
+        python-version: ["3.10", "3.13"]
+    env:
+      UV_PYTHON: ${{ matrix.python-version }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Install uv
+        uses: astral-sh/setup-uv@c771a70e6277c0a99b617c7a806ffedaca235ff9 # v9.0.0
+        with:
+          enable-cache: true
+      - name: Sync dependencies
+        run: uv sync --locked --all-extras
+      - name: pytest
+        run: uv run pytest -rA --color=yes

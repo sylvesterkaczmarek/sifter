@@ -1,0 +1,29 @@
+version: 2
+updates:
+  # GitHub Actions are pinned to commit SHAs in .github/workflows; Dependabot
+  # bumps the pin and its `# vX.Y.Z` comment together when a new release lands,
+  # so pinning by SHA stays maintainable rather than going stale.
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    groups:
+      github-actions:
+        patterns: ["*"]
+
+  # Python dependencies (pyproject.toml + uv.lock).
+  - package-ecosystem: "uv"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    groups:
+      python:
+        patterns: ["*"]
+    ignore:
+      # Interpreter major/minor bumps need coordination beyond the uv files
+      # (CI test matrix, requires-python) — upgrade by hand. Patch releases
+      # are fine to ride in the grouped PR.
+      - dependency-name: "python"
+        update-types:
+          - "version-update:semver-major"
+          - "version-update:semver-minor"

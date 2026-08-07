@@ -1,0 +1,20 @@
+# Valid: linear dependency chain A→B→C→D
+builds:
+  d_0.0.5:
+    steps:
+      - definitions/d.def
+
+  c_0.0.5:
+    base: d_0.0.5
+    steps:
+      - definitions/c.def
+
+  b_0.0.5:
+    base: c_0.0.5
+    steps:
+      - definitions/b.def
+
+  a_0.0.5:
+    base: b_0.0.5
+    steps:
+      - definitions/a.def
